@@ -28,11 +28,22 @@ class Scrapper {
           $institute = $spanElement->getAttribute('title');
           $data = [$author,$institute];
         }
+
+        $divElements = $article->getElementsByTagName("div");
+        foreach ($divElements as $divElement) {
+          if ($divElement->getAttribute('class') === 'tags mr-sm') {
+            $type = $divElement->textContent;
+          }
+          if ($divElement->getAttribute('class') === 'volume-info') {
+            $id = (int) $divElement->textContent;
+          }
+          $info = [$id, $title, $type, $data];
+        }
       }
     }
 
 
-    return $data;
+    return $info;
   }
 
 }

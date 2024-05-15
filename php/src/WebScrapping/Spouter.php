@@ -1,7 +1,7 @@
 <?php
 
 namespace Chuva\Php\WebScrapping;
-
+require_once '../../../vendor/autoload.php';
 
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
@@ -70,7 +70,7 @@ class Spouter {
         return [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2];
     }
     public function spouter ($data) {
-
+        print("11");
         [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
         $maxAuthor = $data[0];
         $papers = $data[1];

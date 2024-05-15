@@ -19,11 +19,15 @@ class Scrapper {
   public function scrap(\DOMDocument $dom): array {
     
     $articles = $dom->getElementsByTagName('a');
+    $maxAuthor = 0;
     
     foreach ($articles as $article) {
       if ($article->getAttribute('class') === 'paper-card p-lg bd-gradient-left') {
         $title = $article->getElementsByTagName("h4")->item(0)->textContent;
         $spanElements = $article->getElementsByTagName("span");
+
+        $numAuthor = $spanElements->length;
+        $maxAuthor = $numAuthor > $maxAuthor ? $numAuthor : $maxAuthor;
         
         $persons = [];
         foreach ($spanElements as $spanElement) {
@@ -47,7 +51,7 @@ class Scrapper {
     }
 
 
-    return $papers;
+    return [$maxAuthor, $papers];
   }
 
 }

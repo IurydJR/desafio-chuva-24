@@ -2,6 +2,8 @@
 
 namespace Chuva\Php\WebScrapping;
 
+require_once 'Scrapper.php';
+require_once 'Spouter.php';
 /**
  * Runner for the Webscrapping exercice.
  */
@@ -21,3 +23,4 @@ class Main {
   }
 
 }
+Main::run();

@@ -5,8 +5,10 @@ namespace Chuva\Php\WebScrapping;
 use Chuva\Php\WebScrapping\Entity\Paper;
 use Chuva\Php\WebScrapping\Entity\Person;
 
-require_once 'Scrapper.php';
-require_once 'Spouter.php';
+require_once 'Entity/Paper.php';
+require_once 'Entity/Person.php';
+
+
 
 /**
  * Does the scrapping of a webpage.

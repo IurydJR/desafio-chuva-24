@@ -3,13 +3,75 @@
 namespace Chuva\Php\WebScrapping;
 
 
-
+use Box\Spout\Common\Entity\Style\Border;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Common\Entity\Style\CellAlignment;
+use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Common\Entity\Row;
 
 class Spouter {
 
+
+    private function styles() {
+
+        $border = (new BorderBuilder())
+            ->setBorderRight('bfbfbf', Border::WIDTH_THIN, Border::STYLE_SOLID)
+            ->setBorderLeft('bfbfbf', Border::WIDTH_THIN, Border::STYLE_SOLID)
+            ->build();
+
+        $styleChuva = (new StyleBuilder())
+            ->setFontBold()            
+            ->setFontItalic()
+            ->setFontSize(18)
+            ->setFontColor('060138')
+            ->setShouldWrapText()
+            ->setCellAlignment(CellAlignment::RIGHT)
+            ->build();
+        $styleInc = (new StyleBuilder())
+            ->setFontBold()
+            ->setFontItalic()
+            ->setFontSize(18)
+            ->setFontColor('060138')
+            ->setShouldWrapText()
+            ->setCellAlignment(CellAlignment::LEFT)
+            ->build();
+        
+        $styleHeader = (new StyleBuilder())
+            ->setBackgroundColor('fcfcfc')
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(12)
+            ->setFontItalic()
+            ->build();
+
+
+        $styleTitle = (new StyleBuilder())
+            ->setFontBold()
+            ->setBackgroundColor('b5b5b5')
+            ->setFontColor(Color::BLACK)
+            ->setFontSize(11)
+            ->build();
+        
+        $styleLine1 = 
+            (new StyleBuilder())
+                ->setBackgroundColor('e3e3e3')
+                ->setFontSize(10)
+                ->setBorder($border)
+                ->build();
+
+        $styleLine2 =
+            (new StyleBuilder())
+                ->setBackgroundColor(Color::WHITE)
+                ->setFontSize(10)
+                ->setBorder($border)
+                ->build();
+        
+        return [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2];
+    }
     public function spouter ($data) {
 
+        [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
         $maxAuthor = $data[0];
         $papers = $data[1];
 
@@ -18,8 +80,8 @@ class Spouter {
         $writer->openToFile(__DIR__ .'/../../assets/papers_'. date("d-m-Y") .'.xlsx'); 
 
         $cellsHeader = [
-            WriterEntityFactory::createCell('chuva'),
-            WriterEntityFactory::createCell('inc.'),
+            WriterEntityFactory::createCell('chuva',$styleChuva),
+            WriterEntityFactory::createCell('inc.',$styleInc),
             WriterEntityFactory::createCell(''),
             WriterEntityFactory::createCell('criado em: ' . date("d-m-Y")),
         ];
@@ -42,11 +104,12 @@ class Spouter {
             $i += 1;
         }
         $multipleRows = [
-            WriterEntityFactory::createRow($cellsHeader),
-            WriterEntityFactory::createRow($cellsTitle),
+            WriterEntityFactory::createRow($cellsHeader, $styleHeader),
+            WriterEntityFactory::createRow($cellsTitle, $styleTitle),
         ];
         $writer->addRows($multipleRows); 
 
+        $i=0;
         foreach ($papers as $article) {
             $cells = [];
             $cells = [
@@ -61,7 +124,14 @@ class Spouter {
                 $cells[]= WriterEntityFactory::createCell($author->institution);
             }
             
-            $singleRow = WriterEntityFactory::createRow($cells);
+            $j=0;
+            while (++$j<=2*($maxAuthor - $numAuthor)){
+                $cells[]= WriterEntityFactory::createCell(' ');
+            }
+            
+            $i = 1 - $i;
+            $styleLine = $i==0 ? $styleLine1 : $styleLine2;
+            $singleRow = WriterEntityFactory::createRow($cells, $styleLine);
             $writer->addRow($singleRow);
         }
         $writer->close();

@@ -17,6 +17,18 @@ class Spouter {
         $writer = WriterEntityFactory::createXLSXWriter();
         $writer->openToFile(__DIR__ .'/../../assets/papers_'. date("d-m-Y") .'.xlsx'); 
 
+        $cellsHeader = [
+            WriterEntityFactory::createCell('chuva'),
+            WriterEntityFactory::createCell('inc.'),
+            WriterEntityFactory::createCell(''),
+            WriterEntityFactory::createCell('criado em: ' . date("d-m-Y")),
+        ];
+        $i=0;
+        while ($i < $maxAuthor*2-1) {
+            $cellsHeader[] = WriterEntityFactory::createCell('');
+            $i+=1;
+        };
+
         $cellsTitle = [
             WriterEntityFactory::createCell('id'),
             WriterEntityFactory::createCell('Title'),
@@ -29,8 +41,11 @@ class Spouter {
             
             $i += 1;
         }
-        $singleRow = WriterEntityFactory::createRow($cellsTitle);
-        $writer->addRow($singleRow); 
+        $multipleRows = [
+            WriterEntityFactory::createRow($cellsHeader),
+            WriterEntityFactory::createRow($cellsTitle),
+        ];
+        $writer->addRows($multipleRows); 
 
         foreach ($papers as $article) {
             $cells = [];

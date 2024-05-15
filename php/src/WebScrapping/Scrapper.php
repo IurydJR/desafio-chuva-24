@@ -14,17 +14,25 @@ class Scrapper {
    * Loads paper information from the HTML and returns the array with the data.
    */
   public function scrap(\DOMDocument $dom): array {
-    return [
-      new Paper(
-        123,
-        'The Nobel Prize in Physiology or Medicine 2023',
-        'Nobel Prize',
-        [
-          new Person('Katalin Karikó', 'Szeged University'),
-          new Person('Drew Weissman', 'University of Pennsylvania'),
-        ]
-      ),
-    ];
+    
+    $articles = $dom->getElementsByTagName('a');
+    
+    foreach ($articles as $article) {
+      if ($article->getAttribute('class') === 'paper-card p-lg bd-gradient-left') {
+        $title = $article->getElementsByTagName("h4")->item(0)->textContent;
+        $spanElements = $article->getElementsByTagName("span");
+        
+        $data = [];
+        foreach ($spanElements as $spanElement) {
+          $author = $spanElement->textContent;
+          $institute = $spanElement->getAttribute('title');
+          $data = [$author,$institute];
+        }
+      }
+    }
+
+
+    return $data;
   }
 
 }

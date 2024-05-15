@@ -5,6 +5,9 @@ namespace Chuva\Php\WebScrapping;
 use Chuva\Php\WebScrapping\Entity\Paper;
 use Chuva\Php\WebScrapping\Entity\Person;
 
+require_once 'Scrapper.php';
+require_once 'Spouter.php';
+
 /**
  * Does the scrapping of a webpage.
  */
@@ -22,11 +25,11 @@ class Scrapper {
         $title = $article->getElementsByTagName("h4")->item(0)->textContent;
         $spanElements = $article->getElementsByTagName("span");
         
-        $data = [];
+        $persons = [];
         foreach ($spanElements as $spanElement) {
           $author = $spanElement->textContent;
           $institute = $spanElement->getAttribute('title');
-          $data = [$author,$institute];
+          $persons[] = new Person($author,$institute);
         }
 
         $divElements = $article->getElementsByTagName("div");
@@ -37,13 +40,14 @@ class Scrapper {
           if ($divElement->getAttribute('class') === 'volume-info') {
             $id = (int) $divElement->textContent;
           }
-          $info = [$id, $title, $type, $data];
+
         }
+        $papers[] = new Paper($id,$title,$type,$persons);
       }
     }
 
 
-    return $info;
+    return $papers;
   }
 
 }

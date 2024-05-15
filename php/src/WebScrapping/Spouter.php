@@ -2,7 +2,9 @@
 
 namespace Chuva\Php\WebScrapping;
 
-require_once '../../../vendor/autoload.php';
+
+
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 class Spouter {
 
@@ -28,5 +30,7 @@ class Spouter {
             $singleRow = WriterEntityFactory::createRow($cells);
             $writer->addRow($singleRow);
         }
+        $writer->close();
+
     }
 }

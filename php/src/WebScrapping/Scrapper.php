@@ -35,7 +35,9 @@ class Scrapper {
         foreach ($spanElements as $spanElement) {
           $author = $spanElement->textContent;
           $institute = $spanElement->getAttribute('title');
-          $persons[] = new Person($author,$institute);
+          if (strlen($author) > 2){
+            $persons[] = new Person($author,$institute);
+          }
         }
 
         $divElements = $article->getElementsByTagName("div");

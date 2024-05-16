@@ -11,9 +11,14 @@ use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
 use Box\Spout\Common\Entity\Row;
 
+/**
+ * Does the xslx document with paper information.
+ */
 class Spouter {
 
-
+    /**
+     * Does the style of the xlsx document.
+     */
     private function styles() {
 
         $border = (new BorderBuilder())
@@ -69,8 +74,11 @@ class Spouter {
         
         return [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2];
     }
+
+    /**
+     * Write the papers info on xlsx document.
+     */
     public function spouter ($data) {
-        print("11");
         [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
         $maxAuthor = $data[0];
         $papers = $data[1];

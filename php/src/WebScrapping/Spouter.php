@@ -1,6 +1,7 @@
 <?php
 
 namespace Chuva\Php\WebScrapping;
+
 require_once '../../../vendor/autoload.php';
 
 use Box\Spout\Common\Entity\Style\Border;
@@ -9,7 +10,6 @@ use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
-use Box\Spout\Common\Entity\Row;
 
 /**
  * Does the xslx document with paper information.
@@ -27,13 +27,14 @@ class Spouter {
             ->build();
 
         $styleChuva = (new StyleBuilder())
-            ->setFontBold()            
+            ->setFontBold()
             ->setFontItalic()
             ->setFontSize(18)
             ->setFontColor('060138')
             ->setShouldWrapText()
             ->setCellAlignment(CellAlignment::RIGHT)
             ->build();
+
         $styleInc = (new StyleBuilder())
             ->setFontBold()
             ->setFontItalic()
@@ -42,7 +43,7 @@ class Spouter {
             ->setShouldWrapText()
             ->setCellAlignment(CellAlignment::LEFT)
             ->build();
-        
+
         $styleHeader = (new StyleBuilder())
             ->setBackgroundColor('fcfcfc')
             ->setFontColor(Color::BLACK)
@@ -50,15 +51,14 @@ class Spouter {
             ->setFontItalic()
             ->build();
 
-
         $styleTitle = (new StyleBuilder())
             ->setFontBold()
             ->setBackgroundColor('b5b5b5')
             ->setFontColor(Color::BLACK)
             ->setFontSize(11)
             ->build();
-        
-        $styleLine1 = 
+
+        $styleLine1 =
             (new StyleBuilder())
                 ->setBackgroundColor('e3e3e3')
                 ->setFontSize(10)
@@ -71,32 +71,31 @@ class Spouter {
                 ->setFontSize(10)
                 ->setBorder($border)
                 ->build();
-        
+
         return [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2];
     }
 
     /**
      * Write the papers info on xlsx document.
      */
-    public function spouter ($data) {
+    public function spouter($data) {
         [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
         $maxAuthor = $data[0];
         $papers = $data[1];
 
-
         $writer = WriterEntityFactory::createXLSXWriter();
-        $writer->openToFile(__DIR__ .'/../../assets/papers_'. date("d-m-Y") .'.xlsx'); 
+        $writer->openToFile(__DIR__ . '/../../assets/papers_' . date("d-m-Y") . '.xlsx');
 
         $cellsHeader = [
-            WriterEntityFactory::createCell('chuva',$styleChuva),
-            WriterEntityFactory::createCell('inc.',$styleInc),
+            WriterEntityFactory::createCell('chuva', $styleChuva),
+            WriterEntityFactory::createCell('inc.', $styleInc),
             WriterEntityFactory::createCell(''),
             WriterEntityFactory::createCell('criado em: ' . date("d-m-Y")),
         ];
-        $i=0;
-        while ($i < $maxAuthor*2-1) {
+        $i = 0;
+        while ($i < $maxAuthor * 2 - 1) {
             $cellsHeader[] = WriterEntityFactory::createCell('');
-            $i+=1;
+            $i += 1;
         };
 
         $cellsTitle = [
@@ -108,16 +107,16 @@ class Spouter {
         while ($i <= $maxAuthor) {
             $cellsTitle[] = WriterEntityFactory::createCell('autor ' . $i);
             $cellsTitle[] = WriterEntityFactory::createCell('instituição ' . $i);
-            
+
             $i += 1;
         }
         $multipleRows = [
             WriterEntityFactory::createRow($cellsHeader, $styleHeader),
             WriterEntityFactory::createRow($cellsTitle, $styleTitle),
         ];
-        $writer->addRows($multipleRows); 
+        $writer->addRows($multipleRows);
 
-        $i=0;
+        $i = 0;
         foreach ($papers as $article) {
             $cells = [];
             $cells = [
@@ -126,23 +125,24 @@ class Spouter {
                 WriterEntityFactory::createCell($article->type),
             ];
             $authors = $article->authors;
-            $numAuthor = count($authors);;
+            $numAuthor = count($authors);
             foreach ($authors as $author) {
-                $cells[]= WriterEntityFactory::createCell($author->name);
-                $cells[]= WriterEntityFactory::createCell($author->institution);
+                $cells[] = WriterEntityFactory::createCell($author->name);
+                $cells[] = WriterEntityFactory::createCell($author->institution);
             }
-            
-            $j=0;
-            while (++$j<=2*($maxAuthor - $numAuthor)){
-                $cells[]= WriterEntityFactory::createCell(' ');
+
+            $j = 0;
+            while (++$j <= 2 * ($maxAuthor - $numAuthor)){
+                $cells[] = WriterEntityFactory::createCell(' ');
             }
-            
+
             $i = 1 - $i;
-            $styleLine = $i==0 ? $styleLine1 : $styleLine2;
+            $styleLine = $i == 0 ? $styleLine1 : $styleLine2;
             $singleRow = WriterEntityFactory::createRow($cells, $styleLine);
             $writer->addRow($singleRow);
         }
         $writer->close();
 
     }
+
 }

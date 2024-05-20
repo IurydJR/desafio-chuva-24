@@ -8,8 +8,6 @@ use Chuva\Php\WebScrapping\Entity\Person;
 require_once 'Entity/Paper.php';
 require_once 'Entity/Person.php';
 
-
-
 /**
  * Does the scrapping of a webpage.
  */
@@ -19,10 +17,10 @@ class Scrapper {
    * Loads paper information from the HTML and returns the array with the data.
    */
   public function scrap(\DOMDocument $dom): array {
-    
+
     $articles = $dom->getElementsByTagName('a');
     $maxAuthor = 0;
-    
+
     foreach ($articles as $article) {
       if ($article->getAttribute('class') === 'paper-card p-lg bd-gradient-left') {
         $title = $article->getElementsByTagName("h4")->item(0)->textContent;
@@ -30,13 +28,13 @@ class Scrapper {
 
         $numAuthor = $spanElements->length;
         $maxAuthor = $numAuthor > $maxAuthor ? $numAuthor : $maxAuthor;
-        
+
         $persons = [];
         foreach ($spanElements as $spanElement) {
           $author = $spanElement->textContent;
           $institute = $spanElement->getAttribute('title');
-          if (strlen($author) > 2){
-            $persons[] = new Person($author,$institute);
+          if (strlen($author) > 2) {
+            $persons[] = new Person($author, $institute);
           }
         }
 
@@ -50,10 +48,9 @@ class Scrapper {
           }
 
         }
-        $papers[] = new Paper($id,$title,$type,$persons);
+        $papers[] = new Paper($id, $title, $type, $persons);
       }
     }
-
 
     return [$maxAuthor, $papers];
   }

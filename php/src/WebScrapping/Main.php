@@ -21,5 +21,6 @@ class Main {
     $data = (new Spouter())->spouter($data);
 
   }
+  
 }
 Main::run();

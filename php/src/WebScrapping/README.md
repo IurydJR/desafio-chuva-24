@@ -5,7 +5,7 @@ Desafio Chuva PHP - WebScrapping
 
 ### Descrição:
 
-Este projeto consiste em um aplicativo para realizar web scraping em uma página HTML específica, extrair informações sobre artigos acadêmicos e gerar um arquivo XLSX com os dados extraídos.
+Este projeto consiste em um aplicativo para realizar web scraping em uma página HTML específica, extrair informações sobre artigos acadêmicos e gerar um arquivo XLSX com os dados extraídos. O projeto faz parte do desafio proposto pela chuva inc.
 
 ### Tecnologias Utilizadas:
 

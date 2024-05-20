@@ -5,23 +5,21 @@ namespace Chuva\Php\WebScrapping;
 require_once '../../../vendor/autoload.php';
 
 use Box\Spout\Common\Entity\Style\Border;
-use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
-use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Common\Entity\Style\CellAlignment;
 use Box\Spout\Common\Entity\Style\Color;
+use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
+use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
+use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 
 /**
  * Does the xslx document with paper information.
  */
-class Spouter
-{
+class Spouter {
 
   /**
    * Does the style of the xlsx document.
    */
-  private function styles()
-  {
+  private function styles() {
 
     $border = (new BorderBuilder())
       ->setBorderRight('bfbfbf', Border::WIDTH_THIN, Border::STYLE_SOLID)
@@ -60,15 +58,13 @@ class Spouter
       ->setFontSize(11)
       ->build();
 
-    $styleLine1 =
-      (new StyleBuilder())
+    $styleLine1 = (new StyleBuilder())
       ->setBackgroundColor('e3e3e3')
       ->setFontSize(10)
       ->setBorder($border)
       ->build();
 
-    $styleLine2 =
-      (new StyleBuilder())
+    $styleLine2 = (new StyleBuilder())
       ->setBackgroundColor(Color::WHITE)
       ->setFontSize(10)
       ->setBorder($border)
@@ -80,8 +76,7 @@ class Spouter
   /**
    * Write the papers info on xlsx document.
    */
-  public function spouter($data)
-  {
+  public function __construct($data) {
     [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
     $maxAuthor = $data[0];
     $papers = $data[1];
@@ -135,7 +130,7 @@ class Spouter
       }
 
       $j = 0;
-      while (++$j <= 2 * ($maxAuthor - $numAuthor) ) {
+      while (++$j <= 2 * ($maxAuthor - $numAuthor)) {
         $cells[] = WriterEntityFactory::createCell(' ');
       }
 
@@ -146,5 +141,4 @@ class Spouter
     }
     $writer->close();
   }
-  
 }

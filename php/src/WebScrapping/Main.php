@@ -18,10 +18,8 @@ class Main {
 
     $data = (new Scrapper())->scrap($dom);
 
-    
     $data = (new Spouter())->spouter($data);
-    
-  }
 
+  }
 }
 Main::run();

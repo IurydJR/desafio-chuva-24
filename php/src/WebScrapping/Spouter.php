@@ -141,5 +141,5 @@ class Spouter {
     }
     $writer->close();
   }
-  
+
 }

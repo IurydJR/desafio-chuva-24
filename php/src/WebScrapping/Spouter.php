@@ -2,7 +2,7 @@
 
 namespace Chuva\Php\WebScrapping;
 
-require_once '../../../vendor/autoload.php';
+require_once '../../vendor/autoload.php';
 
 use Box\Spout\Common\Entity\Style\Border;
 use Box\Spout\Common\Entity\Style\CellAlignment;

@@ -6,8 +6,7 @@
     "autoload": {
         "psr-4": {
             "Chuva\\Php\\": "src/",
-            "Chuva\\Tests\\": "tests/",
-            "Chuva\\Php\\WebScrapping\\": "src/WebScrapping/"
+            "Chuva\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "dev",
@@ -18,8 +17,7 @@
         "openspout/openspout": "^4",
         "psalm/phar": "^4.7",
         "drupal/coder": "8.3.x-dev",
-        "symfony/yaml": "^6.4",
-        "box/spout": "^3.3"
+        "symfony/yaml": "^6.4"
     },
     "config": {
         "allow-plugins": {

@@ -18,6 +18,7 @@ class Scrapper {
    */
   public function scrap(\DOMDocument $dom): array {
 
+    $papers = [];
     $articles = $dom->getElementsByTagName('a');
     $maxAuthor = 0;
 

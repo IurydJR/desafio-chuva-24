@@ -4,15 +4,17 @@ namespace Chuva\Php\WebScrapping;
 
 require_once '../../vendor/autoload.php';
 
-use Box\Spout\Common\Entity\Style\Border;
-use Box\Spout\Common\Entity\Style\CellAlignment;
-use Box\Spout\Common\Entity\Style\Color;
-use Box\Spout\Writer\Common\Creator\Style\BorderBuilder;
-use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
-use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
+use OpenSpout\Common\Entity\Cell;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Common\Entity\Style\Border;
+use OpenSpout\Common\Entity\Style\BorderPart;
+use OpenSpout\Common\Entity\Style\CellAlignment;
+use OpenSpout\Common\Entity\Style\Color;
+use OpenSpout\Common\Entity\Style\Style;
+use OpenSpout\Writer\XLSX\Writer;
 
 /**
- * Does the xslx document with paper information.
+ * Does the xlsx document with paper information.
  */
 class Spouter {
 
@@ -21,54 +23,48 @@ class Spouter {
    */
   private function styles() {
 
-    $border = (new BorderBuilder())
-      ->setBorderRight('bfbfbf', Border::WIDTH_THIN, Border::STYLE_SOLID)
-      ->setBorderLeft('bfbfbf', Border::WIDTH_THIN, Border::STYLE_SOLID)
-      ->build();
+    $border = new Border(
+      new BorderPart(Border::LEFT, Color::rgb(191, 191, 191), Border::WIDTH_THIN, Border::STYLE_SOLID),
+      new BorderPart(Border::RIGHT, Color::rgb(191, 191, 191), Border::WIDTH_THIN, Border::STYLE_SOLID)
+    );
 
-    $styleChuva = (new StyleBuilder())
+    $styleChuva = (new Style())
       ->setFontBold()
       ->setFontItalic()
       ->setFontSize(18)
-      ->setFontColor('060138')
+      ->setFontColor(Color::rgb(6, 1, 56))
       ->setShouldWrapText()
-      ->setCellAlignment(CellAlignment::RIGHT)
-      ->build();
+      ->setCellAlignment(CellAlignment::RIGHT);
 
-    $styleInc = (new StyleBuilder())
+    $styleInc = (new Style())
       ->setFontBold()
       ->setFontItalic()
       ->setFontSize(18)
-      ->setFontColor('060138')
+      ->setFontColor(Color::rgb(6, 1, 56))
       ->setShouldWrapText()
-      ->setCellAlignment(CellAlignment::LEFT)
-      ->build();
+      ->setCellAlignment(CellAlignment::LEFT);
 
-    $styleHeader = (new StyleBuilder())
-      ->setBackgroundColor('fcfcfc')
+    $styleHeader = (new Style())
+      ->setBackgroundColor(Color::rgb(252, 252, 252))
       ->setFontColor(Color::BLACK)
       ->setFontSize(12)
-      ->setFontItalic()
-      ->build();
+      ->setFontItalic();
 
-    $styleTitle = (new StyleBuilder())
+    $styleTitle = (new Style())
       ->setFontBold()
-      ->setBackgroundColor('b5b5b5')
+      ->setBackgroundColor(Color::rgb(181, 181, 181))
       ->setFontColor(Color::BLACK)
-      ->setFontSize(11)
-      ->build();
+      ->setFontSize(11);
 
-    $styleLine1 = (new StyleBuilder())
-      ->setBackgroundColor('e3e3e3')
+    $styleLine1 = (new Style())
+      ->setBackgroundColor(Color::rgb(227, 227, 227))
       ->setFontSize(10)
-      ->setBorder($border)
-      ->build();
+      ->setBorder($border);
 
-    $styleLine2 = (new StyleBuilder())
+    $styleLine2 = (new Style())
       ->setBackgroundColor(Color::WHITE)
       ->setFontSize(10)
-      ->setBorder($border)
-      ->build();
+      ->setBorder($border);
 
     return [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2];
   }
@@ -81,63 +77,62 @@ class Spouter {
     $maxAuthor = $data[0];
     $papers = $data[1];
 
-    $writer = WriterEntityFactory::createXLSXWriter();
+    $writer = new Writer();
     $writer->openToFile(__DIR__ . '/../../assets/papers_' . date("d-m-Y") . '.xlsx');
 
     $cellsHeader = [
-      WriterEntityFactory::createCell('chuva', $styleChuva),
-      WriterEntityFactory::createCell('inc.', $styleInc),
-      WriterEntityFactory::createCell(''),
-      WriterEntityFactory::createCell('criado em: ' . date("d-m-Y")),
+      Cell::fromValue('chuva', $styleChuva),
+      Cell::fromValue('inc.', $styleInc),
+      Cell::fromValue(''),
+      Cell::fromValue('criado em: ' . date("d-m-Y")),
     ];
     $i = 0;
     while ($i < $maxAuthor * 2 - 1) {
-      $cellsHeader[] = WriterEntityFactory::createCell('');
+      $cellsHeader[] = Cell::fromValue('');
       $i += 1;
-    };
+    }
+
+    $rowHeader = new Row($cellsHeader, $styleHeader);
+    $writer->addRow($rowHeader);
 
     $cellsTitle = [
-      WriterEntityFactory::createCell('id'),
-      WriterEntityFactory::createCell('Title'),
-      WriterEntityFactory::createCell('Type'),
+      Cell::fromValue('id'),
+      Cell::fromValue('Title'),
+      Cell::fromValue('Type'),
     ];
     $i = 1;
     while ($i <= $maxAuthor) {
-      $cellsTitle[] = WriterEntityFactory::createCell('autor ' . $i);
-      $cellsTitle[] = WriterEntityFactory::createCell('instituição ' . $i);
-
+      $cellsTitle[] = Cell::fromValue('autor ' . $i);
+      $cellsTitle[] = Cell::fromValue('instituição ' . $i);
       $i += 1;
     }
-    $multipleRows = [
-      WriterEntityFactory::createRow($cellsHeader, $styleHeader),
-      WriterEntityFactory::createRow($cellsTitle, $styleTitle),
-    ];
-    $writer->addRows($multipleRows);
+
+    $rowTitle = new Row($cellsTitle, $styleTitle);
+    $writer->addRow($rowTitle);
 
     $i = 0;
     foreach ($papers as $article) {
-      $cells = [];
       $cells = [
-        WriterEntityFactory::createCell($article->id),
-        WriterEntityFactory::createCell($article->title),
-        WriterEntityFactory::createCell($article->type),
+        Cell::fromValue($article->id),
+        Cell::fromValue($article->title),
+        Cell::fromValue($article->type),
       ];
       $authors = $article->authors;
       $numAuthor = count($authors);
       foreach ($authors as $author) {
-        $cells[] = WriterEntityFactory::createCell($author->name);
-        $cells[] = WriterEntityFactory::createCell($author->institution);
+        $cells[] = Cell::fromValue($author->name);
+        $cells[] = Cell::fromValue($author->institution);
       }
 
       $j = 0;
       while (++$j <= 2 * ($maxAuthor - $numAuthor)) {
-        $cells[] = WriterEntityFactory::createCell(' ');
+        $cells[] = Cell::fromValue(' ');
       }
 
       $i = 1 - $i;
       $styleLine = $i == 0 ? $styleLine1 : $styleLine2;
-      $singleRow = WriterEntityFactory::createRow($cells, $styleLine);
-      $writer->addRow($singleRow);
+      $row = new Row($cells, $styleLine);
+      $writer->addRow($row);
     }
     $writer->close();
   }

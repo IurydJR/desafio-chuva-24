@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fca016eb0293305807e8d96b129409e7",
+    "content-hash": "d0a970f571dde6d77f58f6b1e47bf53d",
     "packages": [
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -443,12 +443,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "7aceb913e56be7eba19fef66b536d0bce4c63718"
+                "reference": "0c6c929144e77601e0c98c43571e5d45ba09a07d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/7aceb913e56be7eba19fef66b536d0bce4c63718",
-                "reference": "7aceb913e56be7eba19fef66b536d0bce4c63718",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/0c6c929144e77601e0c98c43571e5d45ba09a07d",
+                "reference": "0c6c929144e77601e0c98c43571e5d45ba09a07d",
                 "shasum": ""
             },
             "require": {
@@ -516,7 +516,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-04-29T20:15:19+00:00"
+            "time": "2024-05-23T22:20:24+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",

@@ -16,12 +16,12 @@ use OpenSpout\Writer\XLSX\Writer;
 /**
  * Does the xlsx document with paper information.
  */
-class Spouter{
+class Spouter {
 
   /**
    * Does the style of the xlsx document.
    */
-  private function styles(){
+  private function styles() {
 
     $border = new Border(
       new BorderPart(Border::LEFT, Color::rgb(191, 191, 191), Border::WIDTH_THIN, Border::STYLE_SOLID),
@@ -72,7 +72,7 @@ class Spouter{
   /**
    * Get an unrepeated xlsx name based on today's day.
    */
-  private function getFilename(){
+  private function getFilename() {
     $dateToday = date("d-m-Y");
     $directory = __DIR__ . '/../../assets/';
     $basename = 'papers_' . $dateToday;
@@ -92,7 +92,7 @@ class Spouter{
   /**
    * Write the papers info on xlsx document.
    */
-  public function __construct($data){
+  public function __construct($data) {
     [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
     $maxAuthor = $data[0];
     $papers = $data[1];

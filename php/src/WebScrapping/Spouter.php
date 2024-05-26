@@ -69,6 +69,26 @@ class Spouter {
     return [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2];
   }
 
+    /**
+   * get an unrepeated xlsx name based on today's day.
+   */
+  private function getFilename() {
+    $dateToday = date("d-m-Y");
+    $directory = __DIR__ . '/../../assets/';
+    $basename = 'papers_' . $dateToday;
+    $filename = $basename;
+    $i=1;
+  
+    while(file_exists($directory . '/' . $filename . '.xlsx')) {
+      print_r(file_exists($directory . '/' . $filename . '.xlsx'));
+      $filename = $basename . '_' . $i;
+      $i++;
+    }
+    $filename .= '.xlsx';
+    print_r($filename);
+    return ($filename);
+  }
+  
   /**
    * Write the papers info on xlsx document.
    */
@@ -76,9 +96,12 @@ class Spouter {
     [$styleChuva, $styleInc, $styleHeader, $styleTitle, $styleLine1, $styleLine2] = $this->styles();
     $maxAuthor = $data[0];
     $papers = $data[1];
-
+    $filename = $this->getFilename();
+    
+    
     $writer = new Writer();
-    $writer->openToFile(__DIR__ . '/../../assets/papers_' . date("d-m-Y") . '.xlsx');
+
+    $writer->openToFile(__DIR__ . '/../../assets/' . $filename);
 
     $cellsHeader = [
       Cell::fromValue('chuva', $styleChuva),

@@ -89,4 +89,10 @@ class Scrapper {
     }
   }
 
+  public function userScrapper(\DOMDocument $dom) {
+
+    $numArticles = $dom->getElementsByTagName('span')->item(4)->textContent;
+    return $numArticles;
+  }
+
 }

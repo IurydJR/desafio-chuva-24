@@ -73,4 +73,20 @@ class Scrapper {
     return $htmlContent;
   }
 
+  public function userUrl(\DOMDocument $dom) {
+
+    $divElements = $dom->getElementsByTagName('div');
+    $authorLink = '';
+
+    foreach ($divElements as $divElement) {
+      if ($divElement->getAttribute('class') === 'authors-wrapper') {
+        $authors = $divElement->getElementsByTagName('div')->item(0);
+        $author = $authors->getElementsByTagName('li')->item(0);
+        $authorLink = 'https://proceedings.science' . $author->getElementsByTagName('a')->item(0)->getAttribute('href');
+
+      }
+    return $authorLink;
+    }
+  }
+
 }

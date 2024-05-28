@@ -20,12 +20,12 @@ class Person {
   /**
    * Person institution.
    */
-  public string $numArticlesPublished;
+  public ?int $numArticlesPublished;
 
   /**
    * Builder.
    */
-  public function __construct($name, $institution, $numArticlesPublished) {
+  public function __construct($name, $institution, ?int $numArticlesPublished=null) {
     $this->name = $name;
     $this->institution = $institution;
     $this->numArticlesPublished = $numArticlesPublished;

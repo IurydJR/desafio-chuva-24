@@ -31,4 +31,7 @@ class Person {
     $this->numArticlesPublished = $numArticlesPublished;
   }
 
+  public function setNumArticlesPublished($numArticlesPublished) {
+    $this->numArticlesPublished = $numArticlesPublished;
+  }
 }

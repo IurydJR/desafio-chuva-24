@@ -123,6 +123,7 @@ class Spouter {
       Cell::fromValue('Type'),
     ];
     $i = 1;
+    $cellsTitle[] = Cell::fromValue('n° Artigos');
     while ($i <= $maxAuthor) {
       $cellsTitle[] = Cell::fromValue('autor ' . $i);
       $cellsTitle[] = Cell::fromValue('instituição ' . $i);
@@ -134,12 +135,13 @@ class Spouter {
 
     $i = 0;
     foreach ($papers as $article) {
+      $authors = $article->authors;
       $cells = [
         Cell::fromValue($article->id),
         Cell::fromValue($article->title),
         Cell::fromValue($article->type),
+        Cell::fromValue($authors[0]->numArticlesPublished),
       ];
-      $authors = $article->authors;
       $numAuthor = count($authors);
       foreach ($authors as $author) {
         $cells[] = Cell::fromValue($author->name);

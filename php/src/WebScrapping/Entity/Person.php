@@ -30,7 +30,7 @@ class Person {
     $this->institution = $institution;
     $this->numArticlesPublished = $numArticlesPublished;
   }
-  
+
   /**
    * Set numbe of articles published.
    */

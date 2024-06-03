@@ -57,17 +57,17 @@ class Scrapper {
         @$domPaper->loadHTML($this->connection($articleLink));
 
         if ($type == "Poster Presentation") {
-          $userUrl = $this->getUserUrlByPosterPresentationHtml($domPaper);
+          $authorUrl = $this->getAuthorUrlByPosterPresentationHtml($domPaper);
         }
         elseif ($type == "Invited Lecturer") {
-          $userUrl = $this->getUserUrlByInvitedLectureHtml($domPaper);
+          $authorUrl = $this->getAuthorUrlByInvitedLectureHtml($domPaper);
         }
 
-        if (!$userUrl == NULL) {
+        if (!$authorUrl == NULL) {
           $domAuthor = new \DOMDocument('1.0', 'utf-8');
-          @$domAuthor->loadHTML($this->connection($userUrl));
+          @$domAuthor->loadHTML($this->connection($authorUrl));
 
-          $numArticles = $this->userScrapper($domAuthor);
+          $numArticles = $this->authorScrapper($domAuthor);
           $persons[0]->setNumArticlesPublished($numArticles);
         }
         $papers[] = new Paper($id, $title, $type, $persons);
@@ -98,7 +98,7 @@ class Scrapper {
   /**
    * Loads author url from the HTML by poster Presentation and returns the data.
    */
-  public function getUserUrlByPosterPresentationHtml(\DOMDocument $dom) {
+  public function getAuthorUrlByPosterPresentationHtml(\DOMDocument $dom) {
     $divElements = $dom->getElementsByTagName('div');
     $authorLink = '';
 
@@ -116,7 +116,7 @@ class Scrapper {
   /**
    * Loads author url from the HTML by Invited Lecture and returns the data.
    */
-  public function getUserUrlByInvitedLectureHtml(\DOMDocument $dom) {
+  public function getAuthorUrlByInvitedLectureHtml(\DOMDocument $dom) {
     $divElements = $dom->getElementsByTagName('div');
     $authorLink = '';
 
@@ -133,7 +133,7 @@ class Scrapper {
   /**
    * Loads author information from the HTML and returns the number or articles.
    */
-  public function userScrapper(\DOMDocument $dom) {
+  public function authorScrapper(\DOMDocument $dom) {
 
     $numArticles = $dom->getElementsByTagName('span')->item(4)->textContent;
     return $numArticles;

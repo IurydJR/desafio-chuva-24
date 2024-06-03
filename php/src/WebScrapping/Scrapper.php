@@ -11,8 +11,7 @@ require_once 'Entity/Person.php';
 /**
  * Does the scrapping of a webpage.
  */
-class Scrapper
-{
+class Scrapper {
 
   /**
    * Loads paper information from the HTML and returns the array with the data.
@@ -59,11 +58,12 @@ class Scrapper
 
         if ($type == "Poster Presentation") {
           $authorUrl = $this->getAuthorUrlByPosterPresentationHtml($domPaper);
-        } elseif ($type == "Invited Lecturer") {
+        }
+        elseif ($type == "Invited Lecturer") {
           $authorUrl = $this->getAuthorUrlByInvitedLectureHtml($domPaper);
         }
 
-        if (!$authorUrl == null) {
+        if (!$authorUrl == NULL) {
           $domAuthor = new \DOMDocument('1.0', 'utf-8');
           @$domAuthor->loadHTML($this->connection($authorUrl));
 
@@ -83,13 +83,12 @@ class Scrapper
   public function connection($url) {
     $options = [
       'http' => [
-        'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n"
-      ]
+        'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3\r\n"]
     ];
     $context = stream_context_create($options);
-    $htmlContent = @file_get_contents($url, false, $context);
+    $htmlContent = @file_get_contents($url, FALSE, $context);
 
-    if ($htmlContent === false) {
+    if ($htmlContent === FALSE) {
       print_r("Erro ao carregar o conteúdo do site ou site inacessível");
     }
 

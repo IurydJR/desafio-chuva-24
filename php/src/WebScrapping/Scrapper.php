@@ -25,12 +25,15 @@ class Scrapper {
 
     foreach ($articles as $article) {
       if ($article->getAttribute('class') === 'paper-card p-lg bd-gradient-left') {
+
+        $articleLink = $article->getAttribute('href');
+        
         $title = $article->getElementsByTagName("h4")->item(0)->textContent;
         $spanElements = $article->getElementsByTagName("span");
-
+        
         $numAuthor = $spanElements->length;
         $maxAuthor = $numAuthor > $maxAuthor ? $numAuthor : $maxAuthor;
-
+        
         $persons = [];
         foreach ($spanElements as $spanElement) {
           $author = $spanElement->textContent;
@@ -39,8 +42,9 @@ class Scrapper {
             $persons[] = new Person($author, $institute);
           }
         }
-
+        
         $divElements = $article->getElementsByTagName("div");
+
         foreach ($divElements as $divElement) {
           if ($divElement->getAttribute('class') === 'tags mr-sm') {
             $type = $divElement->textContent;
@@ -48,12 +52,30 @@ class Scrapper {
           if ($divElement->getAttribute('class') === 'volume-info') {
             $id = (int) $divElement->textContent;
           }
+        }
+          
+        $domPaper = new \DOMDocument('1.0', 'utf-8');
+        @$domPaper->loadHTML($this->connection($articleLink));
+        
 
+        if($type == "Poster Presentation") {
+          $userUrl = $this->getUserUrlByPosterPresentationHtml($domPaper);
+        }
+        else if($type == "Invited Lecturer") {
+          $userUrl = $this->getUserUrlByInvitedLectureHtml($domPaper);
+        }
+
+        if (!$userUrl==null) {
+          $domAuthor = new \DOMDocument('1.0', 'utf-8');
+          @$domAuthor->loadHTML($this->connection($userUrl));
+
+          $numArticles = $this->userScrapper($domAuthor);
+          $persons[0]->setNumArticlesPublished($numArticles);
         }
         $papers[] = new Paper($id, $title, $type, $persons);
       }
     }
-
+    
     return [$maxAuthor, $papers];
   }
 
@@ -68,27 +90,28 @@ class Scrapper {
     $htmlContent = @file_get_contents($url, false, $context);
 
     if ($htmlContent === FALSE) {
-      die("Erro ao carregar o conteúdo do site ou site inacessível");
+      print_r("Erro ao carregar o conteúdo do site ou site inacessível");
     }      
 
     return $htmlContent;
   }
 
   public function getUserUrlByPosterPresentationHtml(\DOMDocument $dom) {
-
     $divElements = $dom->getElementsByTagName('div');
     $authorLink = '';
-
+    
     foreach ($divElements as $divElement) {
       if ($divElement->getAttribute('class') === 'authors-wrapper') {
         $authors = $divElement->getElementsByTagName('div')->item(0);
         $author = $authors->getElementsByTagName('li')->item(0);
         $authorLink = 'https://proceedings.science' . $author->getElementsByTagName('a')->item(0)->getAttribute('href');
-
+        
       }
-    return $authorLink;
     }
+
+    return $authorLink;
   }
+
   public function getUserUrlByInvitedLectureHtml(\DOMDocument $dom) {
     $divElements = $dom->getElementsByTagName('div');
     $authorLink = '';
@@ -103,7 +126,7 @@ class Scrapper {
     }
     return $authorLink;
   }
-  
+
   public function userScrapper(\DOMDocument $dom) {
 
     $numArticles = $dom->getElementsByTagName('span')->item(4)->textContent;

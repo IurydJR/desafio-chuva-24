@@ -30,8 +30,9 @@ class Person {
     $this->institution = $institution;
     $this->numArticlesPublished = $numArticlesPublished;
   }
+  
   /**
-   * Set numbe of articles published
+   * Set numbe of articles published.
    */
   public function setNumArticlesPublished($numArticlesPublished) {
     $this->numArticlesPublished = $numArticlesPublished;

@@ -25,13 +25,16 @@ class Person {
   /**
    * Builder.
    */
-  public function __construct($name, $institution, ?int $numArticlesPublished=null) {
+  public function __construct($name, $institution, ?int $numArticlesPublished = NULL) {
     $this->name = $name;
     $this->institution = $institution;
     $this->numArticlesPublished = $numArticlesPublished;
   }
-
+  /**
+   * Set numbe of articles published
+   */
   public function setNumArticlesPublished($numArticlesPublished) {
     $this->numArticlesPublished = $numArticlesPublished;
   }
+
 }
